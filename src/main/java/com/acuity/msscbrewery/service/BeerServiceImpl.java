@@ -27,4 +27,12 @@ public class BeerServiceImpl implements BeerService {
         .upc(beerToSave.getUpc())
         .build();
   }
+
+  @Override
+  public void updateBeer(BeerDto beer) {
+  }
+
+  @Override
+  public void deleteBeerById(UUID beerId) {
+  }
 }

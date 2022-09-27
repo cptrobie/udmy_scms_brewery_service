@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.UUID;
 
 /** Created by michael on 2022-09-26. */
@@ -26,14 +27,26 @@ public class BeerController {
   }
 
   @PostMapping
-  public ResponseEntity<BeerDto> createBeer(@RequestBody BeerDto newBeer) {
-
+  public ResponseEntity<Void> createBeer(@RequestBody BeerDto newBeer) {
     BeerDto savedBeer = beerService.saveBeer(newBeer);
 
     HttpHeaders headers = new HttpHeaders();
     // todo add hostname to url
-    headers.add("Location", "/v1/beer/" + savedBeer.getId().toString());
+    headers.setLocation(URI.create("/v1/beer/" + savedBeer.getId().toString()));
 
     return new ResponseEntity<>(headers, HttpStatus.CREATED);
+  }
+
+  @PutMapping(value = "/{beerId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beer) {
+    beer.setId(beerId); // ensure that both values match
+    beerService.updateBeer(beer);
+  }
+
+  @DeleteMapping(value = "/{beerId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteBeer(@PathVariable("beerId") UUID beerId) {
+    beerService.deleteBeerById(beerId);
   }
 }
