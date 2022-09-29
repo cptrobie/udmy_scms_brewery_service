@@ -1,7 +1,7 @@
-package com.acuity.msscbrewery.controller;
+package com.acuity.msscbrewery.controller.V2;
 
-import com.acuity.msscbrewery.model.BeerDto;
-import com.acuity.msscbrewery.service.BeerService;
+import com.acuity.msscbrewery.model.V2.BeerDtoV2;
+import com.acuity.msscbrewery.service.V2.BeerServiceV2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,25 +11,24 @@ import java.net.URI;
 import java.util.UUID;
 
 /** Created by michael on 2022-09-26. */
-@Deprecated
 @RestController
-@RequestMapping(value = "/v1/beer")
-public class BeerController {
+@RequestMapping(value = "/v2/beer")
+public class BeerControllerV2 {
 
-  private final BeerService beerService;
+  private final BeerServiceV2 beerService;
 
-  public BeerController(BeerService beerService) {
+  public BeerControllerV2(BeerServiceV2 beerService) {
     this.beerService = beerService;
   }
 
   @GetMapping(value = "/{beerId}")
-  public ResponseEntity<BeerDto> getBeer(@PathVariable("beerId") UUID beerId) {
+  public ResponseEntity<BeerDtoV2> getBeer(@PathVariable("beerId") UUID beerId) {
     return new ResponseEntity<>(beerService.getBeerById(beerId), HttpStatus.OK);
   }
 
   @PostMapping
-  public ResponseEntity<Void> createBeer(@RequestBody BeerDto newBeer) {
-    BeerDto savedBeer = beerService.saveBeer(newBeer);
+  public ResponseEntity<Void> createBeer(@RequestBody BeerDtoV2 newBeer) {
+    BeerDtoV2 savedBeer = beerService.saveBeer(newBeer);
 
     HttpHeaders headers = new HttpHeaders();
     // todo add hostname to url
@@ -40,7 +39,7 @@ public class BeerController {
 
   @PutMapping(value = "/{beerId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beer) {
+  public void updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody BeerDtoV2 beer) {
     beer.setId(beerId); // ensure that both values match
     beerService.updateBeer(beer);
   }
